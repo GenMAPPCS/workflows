@@ -14,7 +14,6 @@
 	<property name="cytoroot.dir" value=".."/>	
 	<property name="release.dir" value="../cytoscape2.6"/>
 	<property name="lib.dir" value = "../cytoscape2.6/lib"/>
-	<property name="pluginlib.dir" value="lib"/>
 	
   	<!-- Temporary build directories -->
  	<property name="build.dir" value="build"/>
@@ -34,11 +33,7 @@
 		<fileset dir="${release.dir}">
 			<include name="*.jar"/>
 		</fileset>
-		
-		<fileset dir="${pluginlib.dir}">
-			<include name="*.jar"/>
-		</fileset>
-		
+	
 
 	</path>
 
@@ -69,10 +64,6 @@
   	
 	<!--  Create PlugIn Jar File (Unobfuscated) -->
    	<target name="jar" depends="compile" description="Creates PlugIn Jar File.">
-
-           <unjar dest="${build.classes}">
-            <fileset dir="${pluginlib.dir}"/>
-           </unjar>
  
    		<jar destfile="${build.dir}/${plugin.name}.jar">
 			<fileset dir="${build.classes}"/>

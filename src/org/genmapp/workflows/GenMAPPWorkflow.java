@@ -1,23 +1,40 @@
-
 package org.genmapp.workflows;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JDialog;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+
+import cytoscape.Cytoscape;
 import cytoscape.plugin.CytoscapePlugin;
 
 public class GenMAPPWorkflow extends CytoscapePlugin {
-    public GenMAPPWorkflow {
-        // Plugin initialization.  Note: we don't want to look for MyPlugin yet.  That should
-        // wait until we actually want to use it.  This avoids errors that result from the
-        // arbitrary loading order of plugins.
-    }
+	public GenMAPPWorkflow() {
+		JMenuItem item = new JMenuItem("GenMAPP Workflow");
+		JMenu pluginMenu = Cytoscape.getDesktop().getCyMenus().getMenuBar()
+				.getMenu("Plugins");
+		item.addActionListener(new WorkflowsCommandListener(this));
+		pluginMenu.add(item);
 
-    public void doWork() {
-        Map<String, Object> args = new HashMap();
-        args.put("iterations", new Integer(10));
-        try {
-            CyCommandResult result = CyCommandManager.execute("my algorithm", "analyze", args);
-            // Visualize data from result
-        } catch (CyCommandException e) {
-            // Handle exception
-        }
-    }
+	}
+
+	// Handles the top-level menu selection event from Cytoscape
+	class WorkflowsCommandListener implements ActionListener {
+		GenMAPPWorkflow plugin = null;
+
+		public WorkflowsCommandListener(GenMAPPWorkflow plugin_) {
+			plugin = plugin_;
+		}
+
+		public void actionPerformed(ActionEvent evt_) {
+			// pop up dialog
+			JDialog d = new JDialog();
+			d.add(new FlowTree());
+			d.pack();
+			d.setVisible(true);
+		}
+	}
 }
