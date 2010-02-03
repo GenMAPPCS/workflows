@@ -15,18 +15,18 @@ public class ImportDataCommand extends AbstractCommand {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void actionPerformed(ActionEvent e) {
-
-		Map<String, Object> args = new HashMap();
-
-		try {
-			CyCommandResult result = CyCommandManager.execute("genmapp import",
-					"open", args);
-			// Visualize data from result
-		} catch (CyCommandException ex) {
-			// Handle exception
-		}
-
-	}
+//	public void actionPerformed(ActionEvent e) {
+//
+//		Map<String, Object> args = new HashMap();
+//
+//		try {
+//			CyCommandResult result = CyCommandManager.execute("genmapp import",
+//					"open", args);
+//			// Visualize data from result
+//		} catch (CyCommandException ex) {
+//			// Handle exception
+//		}
+//
+//	}
 
 }

@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.genmapp.workflows.commands.AbstractCommand;
+import org.genmapp.workflows.commands.BuildCriteriaCommand;
 import org.genmapp.workflows.commands.ImportDataCommand;
 
 import cytoscape.CyNetwork;
@@ -28,6 +29,7 @@ public class FlowTree extends JPanel implements TreeSelectionListener {
 	static {
 		FLOWTREE.put(0, "GenMAPP-CS");
 		FLOWTREE.put(1, "Load Data");
+		FLOWTREE.put(2, "Build Criteria");
 	}
 
 	public FlowTree() {
@@ -38,7 +40,11 @@ public class FlowTree extends JPanel implements TreeSelectionListener {
 
 		DefaultMutableTreeNode one = new DefaultMutableTreeNode(
 				new ImportDataCommand(FLOWTREE.get(1)));
+		DefaultMutableTreeNode two = new DefaultMutableTreeNode(
+				new BuildCriteriaCommand(FLOWTREE.get(2)));
+
 		root.add(one);
+		root.add(two);
 
 		tree = new JTree(root);
 		tree.getSelectionModel().setSelectionMode(

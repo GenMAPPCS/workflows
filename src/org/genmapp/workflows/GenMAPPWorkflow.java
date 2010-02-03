@@ -17,7 +17,6 @@ public class GenMAPPWorkflow extends CytoscapePlugin {
 				.getMenu("Plugins");
 		item.addActionListener(new WorkflowsCommandListener(this));
 		pluginMenu.add(item);
-
 	}
 
 	// Handles the top-level menu selection event from Cytoscape
