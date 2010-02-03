@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
 import cytoscape.Cytoscape;
 import cytoscape.plugin.CytoscapePlugin;
@@ -25,8 +24,8 @@ public class GenMAPPWorkflow extends CytoscapePlugin {
 	class WorkflowsCommandListener implements ActionListener {
 		GenMAPPWorkflow plugin = null;
 
-		public WorkflowsCommandListener(GenMAPPWorkflow plugin_) {
-			plugin = plugin_;
+		public WorkflowsCommandListener(GenMAPPWorkflow p) {
+			plugin = p;
 		}
 
 		public void actionPerformed(ActionEvent evt_) {
