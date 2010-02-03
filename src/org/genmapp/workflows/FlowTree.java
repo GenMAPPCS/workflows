@@ -25,26 +25,26 @@ public class FlowTree extends JPanel implements TreeSelectionListener {
 	private JTree tree;
 	private static String lineStyle = "Horizontal";
 
-	private final static HashMap<Integer, String> FLOWTREE = new HashMap<Integer, String>();
+	private final static HashMap<Double, String> FLOWTREE = new HashMap<Double, String>();
 	static {
-		FLOWTREE.put(0, "GenMAPP-CS");
-		FLOWTREE.put(1, "Load Data");
-		FLOWTREE.put(2, "Build Criteria");
+		FLOWTREE.put(0.0, "GenMAPP-CS");
+		FLOWTREE.put(1.0, "Load Data");
+		FLOWTREE.put(2.0, "Build Criteria");
 	}
 
 	public FlowTree() {
 
 		// build the tree
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(FLOWTREE
-				.get(0));
+				.get(0.0));
 
-		DefaultMutableTreeNode one = new DefaultMutableTreeNode(
-				new ImportDataCommand(FLOWTREE.get(1)));
-		DefaultMutableTreeNode two = new DefaultMutableTreeNode(
-				new BuildCriteriaCommand(FLOWTREE.get(2)));
+		DefaultMutableTreeNode step1 = new DefaultMutableTreeNode(
+				new ImportDataCommand(FLOWTREE.get(1.0)));
+		DefaultMutableTreeNode step2 = new DefaultMutableTreeNode(
+				new BuildCriteriaCommand(FLOWTREE.get(2.0)));
 
-		root.add(one);
-		root.add(two);
+		root.add(step1);
+		root.add(step2);
 
 		tree = new JTree(root);
 		tree.getSelectionModel().setSelectionMode(
