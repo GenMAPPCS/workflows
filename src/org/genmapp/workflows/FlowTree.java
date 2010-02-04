@@ -2,6 +2,8 @@ package org.genmapp.workflows;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -20,32 +22,43 @@ import org.genmapp.workflows.commands.ImportDataCommand;
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
 
-public class FlowTree extends JPanel implements TreeSelectionListener {
+public class FlowTree extends JPanel implements TreeSelectionListener, ActionListener {
 
-	private JTree tree;
+	public JTree tree;
 	private static String lineStyle = "Horizontal";
 
-	private final static HashMap<Double, String> FLOWTREE = new HashMap<Double, String>();
+	public static HashMap<Double, String> flowTree = new HashMap<Double, String>();
 	static {
-		FLOWTREE.put(0.0, "GenMAPP-CS");
-		FLOWTREE.put(1.0, "Load Data");
-		FLOWTREE.put(2.0, "Build Criteria");
+		flowTree.put(0.0, "GenMAPP-CS");
+		flowTree.put(1.0, "Load Data");
+		flowTree.put(2.0, "Build Criteria");
+		flowTree.put(3.0, "Open Criteria");
 	}
+	
+
+	// make root available to command actions
+	public static DefaultMutableTreeNode root = new DefaultMutableTreeNode(flowTree
+			.get(0.0));
+	
 
 	public FlowTree() {
 
 		// build the tree
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(FLOWTREE
-				.get(0.0));
-
 		DefaultMutableTreeNode step1 = new DefaultMutableTreeNode(
-				new ImportDataCommand(FLOWTREE.get(1.0)));
+				new ImportDataCommand(flowTree.get(1.0)));
 		DefaultMutableTreeNode step2 = new DefaultMutableTreeNode(
-				new BuildCriteriaCommand(FLOWTREE.get(2.0)));
+				new BuildCriteriaCommand(flowTree.get(2.0)));
+		DefaultMutableTreeNode step3 = new DefaultMutableTreeNode(
+				new BuildCriteriaCommand(flowTree.get(3.0)));
 
 		root.add(step1);
 		root.add(step2);
+		root.add(step3);
 
+		buildTreeView();
+	}
+	
+	public void buildTreeView() {
 		tree = new JTree(root);
 		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -61,7 +74,7 @@ public class FlowTree extends JPanel implements TreeSelectionListener {
 				java.awt.Color.white));
 
 		// set scrollpane size:
-		Collection<String> treeItems = FLOWTREE.values();
+		Collection<String> treeItems = flowTree.values();
 		int maxWidth = 0;
 		for (String i : treeItems) {
 			if (i.length() > maxWidth) {
@@ -74,6 +87,7 @@ public class FlowTree extends JPanel implements TreeSelectionListener {
 		// add tree to this pane
 		setLayout(new BorderLayout());
 		add(treeView, BorderLayout.CENTER);
+
 	}
 
 	public void valueChanged(TreeSelectionEvent e) {
@@ -94,12 +108,20 @@ public class FlowTree extends JPanel implements TreeSelectionListener {
 
 			if (userObject instanceof AbstractCommand) {
 				((AbstractCommand) userObject).actionPerformed(null);
+				this.revalidate();
+				//buildTreeView();
 			} else {
 				// user may have selected an internal (Non-leaf) node. Do
 				// nothing
 			}
 		}
 
+	}
+
+
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
