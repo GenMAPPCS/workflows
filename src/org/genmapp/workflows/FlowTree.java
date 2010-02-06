@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -13,6 +16,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.genmapp.workflows.commands.AbstractCommand;
@@ -22,7 +26,7 @@ import org.genmapp.workflows.commands.ImportDataCommand;
 import cytoscape.CyNetwork;
 import cytoscape.Cytoscape;
 
-public class FlowTree extends JPanel implements TreeSelectionListener, ActionListener {
+public class FlowTree extends JPanel implements TreeSelectionListener, ActionListener, MouseListener {
 
 	public JTree tree;
 	private static String lineStyle = "Horizontal";
@@ -42,7 +46,7 @@ public class FlowTree extends JPanel implements TreeSelectionListener, ActionLis
 	
 
 	public FlowTree() {
-
+		
 		// build the tree
 		DefaultMutableTreeNode step1 = new DefaultMutableTreeNode(
 				new ImportDataCommand(flowTree.get(1.0)));
@@ -56,6 +60,25 @@ public class FlowTree extends JPanel implements TreeSelectionListener, ActionLis
 		root.add(step3);
 
 		buildTreeView();
+		
+		MouseListener ml = new MouseAdapter() {
+		     public void mousePressed(MouseEvent e) {
+		         int selRow = tree.getRowForLocation(e.getX(), e.getY());
+		         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+		         if(selRow != -1) {
+		             if(e.getClickCount() == 1) { 
+		                 tree.setSelectionRow(selRow);
+		                 tree.setSelectionPath(selPath);
+		                 treeSelection();
+		             }
+		             else if(e.getClickCount() == 2) {
+		               //  myDoubleClick(selRow, selPath);
+		             }
+		         }
+		     }
+		 };
+		 tree.addMouseListener(ml);
+
 	}
 	
 	public void buildTreeView() {
@@ -90,7 +113,7 @@ public class FlowTree extends JPanel implements TreeSelectionListener, ActionLis
 
 	}
 
-	public void valueChanged(TreeSelectionEvent e) {
+	public void treeSelection() {
 		// TODO Auto-generated method stub
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
@@ -116,12 +139,45 @@ public class FlowTree extends JPanel implements TreeSelectionListener, ActionLis
 			}
 		}
 
+
 	}
 
 
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Clicked!!!");
+	}
+
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Pressed!!!");
+		
+	}
+
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void valueChanged(TreeSelectionEvent e) {
+		// TODO Auto-generated method stub
+		//handled by mouselistener
 	}
 
 }
