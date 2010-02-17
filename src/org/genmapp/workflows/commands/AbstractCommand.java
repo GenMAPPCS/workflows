@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import cytoscape.Cytoscape;
 import cytoscape.util.CytoscapeAction;
 
-public class AbstractCommand extends CytoscapeAction {
+public class AbstractCommand  {
 	private String name;
 	
 	public AbstractCommand(String n)
@@ -16,19 +16,16 @@ public class AbstractCommand extends CytoscapeAction {
 		name = n;
 	}
 	
-	public String toString()
-	{
-		return name;
-	}
 		
+	
 	/**
 	 * ActionPerformed should be overridden by all extending classes
 	 * @param e
 	 */
-	public void actionPerformed (ActionEvent e)
+	public void execute(String com)
 	{
 		JOptionPane.showMessageDialog(Cytoscape.getDesktop(), 
-				new String("Sorry, " + name + " is not yet implemented."));
+				new String("Sorry, " + com + " is not yet implemented."));
 
 	}
 

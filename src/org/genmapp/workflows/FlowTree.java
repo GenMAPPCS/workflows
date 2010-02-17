@@ -1,14 +1,11 @@
 package org.genmapp.workflows;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Collection;
-import java.util.HashMap;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,69 +16,61 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.genmapp.workflows.commands.AbstractCommand;
-import org.genmapp.workflows.commands.BuildCriteriaCommand;
-import org.genmapp.workflows.commands.ImportDataCommand;
+import org.genmapp.workflows.FlowTreeNode.NodeType;
 
-import cytoscape.CyNetwork;
-import cytoscape.Cytoscape;
-
-public class FlowTree extends JPanel implements TreeSelectionListener, ActionListener, MouseListener {
+public class FlowTree extends JPanel implements TreeSelectionListener,
+		ActionListener, MouseListener {
 
 	public JTree tree;
 	private static String lineStyle = "Horizontal";
 
-	public static HashMap<Double, String> flowTree = new HashMap<Double, String>();
-	static {
-		flowTree.put(0.0, "GenMAPP-CS");
-		flowTree.put(1.0, "Load Data");
-		flowTree.put(2.0, "Build Criteria");
-		flowTree.put(3.0, "Open Criteria");
-	}
-	
-
-	// make root available to command actions
-	public static DefaultMutableTreeNode root = new DefaultMutableTreeNode(flowTree
-			.get(0.0));
-	
-
 	public FlowTree() {
-		
+
+		FlowTreeNode root = new FlowTreeNode(null, "GenMAPP-CS",
+				NodeType.ALWAYS);
+		FlowTreeNode step1 = new FlowTreeNode(root, "Load Data",
+				NodeType.ALWAYS, "genmapp import", "open");
+		new FlowTreeNode(step1, "Select file", NodeType.AFTER_PREV);
+		new FlowTreeNode(step1, "Visualize", NodeType.AFTER_PREV);
+		FlowTreeNode step2 =  new FlowTreeNode(root, "Build Criteria", NodeType.ALWAYS);
+		new FlowTreeNode(step2, "Create default criteria", NodeType.AFTER_PREV, "criteria mapper", "build default");
+		new FlowTreeNode(step2, "Open existing criteria", NodeType.WITH_PREV, "criteria mapper", "open");
+		// flowTree.put(3.0, new FlowTreeNode("Cluster", NodeType.NONE));
+		// flowTree.put(3.1, new FlowTreeNode("Select cluster parameters",
+		// NodeType.NONE));
+		// flowTree.put(3.2, new FlowTreeNode("Visualize", NodeType.NONE));
+		// flowTree.put(4.0, new FlowTreeNode("Pathway Analysis",
+		// NodeType.NONE));
+		// flowTree.put(4.1, new FlowTreeNode("Load results", NodeType.NONE));
+		// flowTree.put(5.0, new FlowTreeNode("Load Additional Pathways",
+		// NodeType.NONE));
+		// flowTree.put(6.0, new FlowTreeNode("Summary Report", NodeType.NONE));
+		// flowTree.put(7.0, new FlowTreeNode("Export Options", NodeType.NONE));
+
 		// build the tree
-		DefaultMutableTreeNode step1 = new DefaultMutableTreeNode(
-				new ImportDataCommand(flowTree.get(1.0)));
-		DefaultMutableTreeNode step2 = new DefaultMutableTreeNode(
-				new BuildCriteriaCommand(flowTree.get(2.0)));
-		DefaultMutableTreeNode step3 = new DefaultMutableTreeNode(
-				new BuildCriteriaCommand(flowTree.get(3.0)));
 
-		root.add(step1);
-		root.add(step2);
-		root.add(step3);
+		buildTreeView(root);
 
-		buildTreeView();
-		
 		MouseListener ml = new MouseAdapter() {
-		     public void mousePressed(MouseEvent e) {
-		         int selRow = tree.getRowForLocation(e.getX(), e.getY());
-		         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-		         if(selRow != -1) {
-		             if(e.getClickCount() == 1) { 
-		                 tree.setSelectionRow(selRow);
-		                 tree.setSelectionPath(selPath);
-		                 treeSelection();
-		             }
-		             else if(e.getClickCount() == 2) {
-		               //  myDoubleClick(selRow, selPath);
-		             }
-		         }
-		     }
-		 };
-		 tree.addMouseListener(ml);
+			public void mousePressed(MouseEvent e) {
+				int selRow = tree.getRowForLocation(e.getX(), e.getY());
+				TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+				if (selRow != -1) {
+					if (e.getClickCount() == 1) {
+						tree.setSelectionRow(selRow);
+						tree.setSelectionPath(selPath);
+						treeSelection();
+					} else if (e.getClickCount() == 2) {
+						// myDoubleClick(selRow, selPath);
+					}
+				}
+			}
+		};
+		tree.addMouseListener(ml);
 
 	}
-	
-	public void buildTreeView() {
+
+	public void buildTreeView(DefaultMutableTreeNode root) {
 		tree = new JTree(root);
 		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -97,15 +86,15 @@ public class FlowTree extends JPanel implements TreeSelectionListener, ActionLis
 				java.awt.Color.white));
 
 		// set scrollpane size:
-		Collection<String> treeItems = flowTree.values();
-		int maxWidth = 0;
-		for (String i : treeItems) {
-			if (i.length() > maxWidth) {
-				maxWidth = i.length();
-			}
-		}
-		Dimension size = new Dimension(maxWidth + maxWidth / 2, 1);
-		treeView.setMinimumSize(size);
+		// Collection<String> treeItems = flowTree.values();
+		// int maxWidth = 0;
+		// for (String i : treeItems) {
+		// if (i.length() > maxWidth) {
+		// maxWidth = i.length();
+		// }
+		// }
+		// Dimension size = new Dimension(maxWidth + maxWidth / 2, 1);
+		// treeView.setMinimumSize(size);
 
 		// add tree to this pane
 		setLayout(new BorderLayout());
@@ -115,39 +104,25 @@ public class FlowTree extends JPanel implements TreeSelectionListener, ActionLis
 
 	public void treeSelection() {
 		// TODO Auto-generated method stub
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
+		FlowTreeNode ftn = (FlowTreeNode) tree.getLastSelectedPathComponent();
 
-		CyNetwork currentNetwork = Cytoscape.getCurrentNetwork();
-
-		if (node == null)
+		if (ftn == null)
 			return;
 		else
 
 		{
-			Object userObject = node.getUserObject();
-			if (userObject == null)
-				return;
 
-			if (userObject instanceof AbstractCommand) {
-				((AbstractCommand) userObject).actionPerformed(null);
-				this.revalidate();
-				//buildTreeView();
-			} else {
-				// user may have selected an internal (Non-leaf) node. Do
-				// nothing
-			}
+			ftn.execute();
+			this.revalidate();
+			// buildTreeView();
+
 		}
-
-
 	}
-
 
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -156,28 +131,28 @@ public class FlowTree extends JPanel implements TreeSelectionListener, ActionLis
 
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("Pressed!!!");
-		
+
 	}
 
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void valueChanged(TreeSelectionEvent e) {
 		// TODO Auto-generated method stub
-		//handled by mouselistener
+		// handled by mouselistener
 	}
 
 }
