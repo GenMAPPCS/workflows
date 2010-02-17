@@ -32,20 +32,17 @@ public class FlowTree extends JPanel implements TreeSelectionListener,
 				NodeType.ALWAYS, "genmapp import", "open");
 		new FlowTreeNode(step1, "Select file", NodeType.AFTER_PREV);
 		new FlowTreeNode(step1, "Visualize", NodeType.AFTER_PREV);
-		FlowTreeNode step2 =  new FlowTreeNode(root, "Build Criteria", NodeType.ALWAYS);
+		FlowTreeNode step2 = new FlowTreeNode(root, "Build Criteria", NodeType.ALWAYS);
 		new FlowTreeNode(step2, "Create default criteria", NodeType.AFTER_PREV, "criteria mapper", "build default");
 		new FlowTreeNode(step2, "Open existing criteria", NodeType.WITH_PREV, "criteria mapper", "open");
-		// flowTree.put(3.0, new FlowTreeNode("Cluster", NodeType.NONE));
-		// flowTree.put(3.1, new FlowTreeNode("Select cluster parameters",
-		// NodeType.NONE));
-		// flowTree.put(3.2, new FlowTreeNode("Visualize", NodeType.NONE));
-		// flowTree.put(4.0, new FlowTreeNode("Pathway Analysis",
-		// NodeType.NONE));
-		// flowTree.put(4.1, new FlowTreeNode("Load results", NodeType.NONE));
-		// flowTree.put(5.0, new FlowTreeNode("Load Additional Pathways",
-		// NodeType.NONE));
-		// flowTree.put(6.0, new FlowTreeNode("Summary Report", NodeType.NONE));
-		// flowTree.put(7.0, new FlowTreeNode("Export Options", NodeType.NONE));
+		FlowTreeNode step3 = new FlowTreeNode(root, "Cluster", NodeType.ALWAYS);
+		new FlowTreeNode(step3, "Select cluster parameters", NodeType.AFTER_PREV, "cluster maker", "open");
+		new FlowTreeNode(step3, "Visualize", NodeType.WITH_PREV, "cluster maker", "visualize");
+		FlowTreeNode step4 = new FlowTreeNode(root, "Pathway Analysis", NodeType.ALWAYS);
+		new FlowTreeNode(step4, "Load results", NodeType.AFTER_PREV, "gpml", "open");
+		FlowTreeNode step5 = new FlowTreeNode(root, "Load Additional Pathways", NodeType.ALWAYS);
+		FlowTreeNode step6 = new FlowTreeNode(root, "Summary Report", NodeType.ALWAYS);
+		FlowTreeNode step7 = new FlowTreeNode(root, "Export Options", NodeType.ALWAYS);
 
 		// build the tree
 
